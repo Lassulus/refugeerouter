@@ -7,16 +7,13 @@ let
     pkgs = pkgs;
     # python = "python39";
   };
+  python = mach-nix.mkPython {
+    requirements = builtins.readFile ./requirements.txt;
+  };
 in
 pkgs.mkShell {
   buildInputs = [
-    (mach-nix.mkPython {
-      requirements = builtins.readFile ./requirements.txt;
-    })
-    # (pkgs.python3.withPackages (pp: [
-    #   pp.django_4
-    #   pp.ipython
-    # ]))
+    python
     (pkgs.writers.writeBashBin "init-project" ''
       # https://gist.github.com/kalafut/42bd31b2fdbf7a225da94e320d3e29ba
       # Simple creation of a single-app django project, as described in: https://zindilis.com/posts/django-anatomy-for-single-app/
