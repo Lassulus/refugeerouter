@@ -6,7 +6,7 @@ import uuid
 
 class Group(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
-    group_relation = models.ForeignKey('self', on_delete=models.CASCADE) # if groups want to belong together TODO make better abstraction
+    group_relation = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True) # if groups want to belong together TODO make better abstraction
     contact = models.CharField(max_length=128)
     name = models.CharField(max_length=1024)
     wish_city = models.CharField(max_length=1024)
@@ -19,15 +19,29 @@ class Group(models.Model):
 
 
 class Refugee(models.Model):
+    GENDER_DIVERSE='D'
+    GENDER_FEMALE='F'
+    GENDER_MALE='M'
+    GENDER_UNKNOWN='U'
+    GENDER_CHOICES = [
+        (GENDER_DIVERSE, 'Diverse'),
+        (GENDER_FEMALE, 'Female'),
+        (GENDER_MALE, 'Male'),
+        (GENDER_UNKNOWN, 'Unknown'),
+    ]
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     first_name = models.CharField(max_length=1024)
     last_name = models.CharField(max_length=1024)
-    age = models.IntegerField(default=1)
-    gender = models.IntegerField(default=1)
+    age = models.IntegerField(default=40)
+    gender = models.CharField(
+        max_length=1,
+        choices=GENDER_CHOICES,
+        default=GENDER_UNKNOWN
+    )
     contact_data = models.CharField(max_length=1024)
     origin = models.CharField(max_length=1024)
     origin_checked = models.BooleanField(default=False)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, blank=True, null=True)
 
     class Meta:
         ordering = ['last_name']
@@ -40,13 +54,17 @@ class Flat(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     rooms = models.IntegerField(default=1)
     kitchen = models.IntegerField(default=1)
+    shared_kitchen = models.BooleanField(default=True)
+    shared_bath = models.BooleanField(default=True)
     bath = models.IntegerField(default=1)
     owner_first_name = models.CharField(max_length=1024)
     owner_last_name = models.CharField(max_length=1024)
+    contact_data = models.CharField(max_length=1024)
+    address = models.CharField(max_length=1024)
     max_male = models.IntegerField(default=0)
     max_kids = models.IntegerField(default=0)
     max_adults = models.IntegerField(default=0)
-    min_age = models.IntegerField(default=0)
+    min_kids_age = models.IntegerField(default=0)
     max_kids_age = models.IntegerField(default=18)
 
     class Meta:
