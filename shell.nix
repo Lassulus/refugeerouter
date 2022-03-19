@@ -14,6 +14,20 @@ in
 pkgs.mkShell {
   buildInputs = [
     python
+    (pkgs.writers.writeDashBin "deploy" ''
+      rsync -va \
+        -e "ssh -p 45621 -o StrictHostKeyChecking=no" \
+        --filter=':- .gitignore' \
+        ${toString ./.}/ ref.ptkk.de@ref.ptkk.de:/var/lib/ref.ptkk.de/code/
+    '')
+    (pkgs.writers.writeDashBin "serve" ''
+      cd ${toString ./.}
+      if test -n $PRODUCTION; then
+        python manage.py collectstatic
+      fi
+      python manage.py migrate
+      gunicorn wsgi:application -b localhost:''${PORT:-1337}
+    '')
     (pkgs.writers.writeBashBin "init-project" ''
       # https://gist.github.com/kalafut/42bd31b2fdbf7a225da94e320d3e29ba
       # Simple creation of a single-app django project, as described in: https://zindilis.com/posts/django-anatomy-for-single-app/
