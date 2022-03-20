@@ -7,7 +7,7 @@ class RefugeeSerializer(serializers.ModelSerializer):
     is_male = serializers.SerializerMethodField()
 
     def get_is_adult(self, refugee):
-        return refugee.age > 18
+        return refugee.age > 17
 
     def get_is_male(self, refugee):
         return refugee.gender == Refugee.GENDER_MALE
@@ -19,6 +19,14 @@ class RefugeeSerializer(serializers.ModelSerializer):
 
 class GroupSerializer(serializers.ModelSerializer):
     refugees = RefugeeSerializer(many=True)
+    num_children = serializers.SerializerMethodField()
+    num_adults = serializers.SerializerMethodField()
+
+    def get_num_children(self, group):
+        return len(group.refugees.exclude(age__gt=17))
+
+    def get_num_adults(self, group):
+        return len(group.refugees.filter(age__gt=17))
 
     class Meta:
         model = Group
