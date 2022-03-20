@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}ref.ptkk.de{% endblock %}</title>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+  <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+  <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="//cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.11.5/b-2.2.2/b-html5-2.2.2/date-1.1.2/r-2.2.9/datatables.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.11.5/b-2.2.2/b-html5-2.2.2/date-1.1.2/r-2.2.9/datatables.min.css"/>
+</head>
+</head>
+<body>
+  <main>
+    {% if user.is_authenticated %}
+      {% block content %}
+      {% endblock %}
+    {% else %}
+      <p>You are not logged in</p>
+      <a href="{% url 'login' %}">Log In</a>
+    {% endif %}
+  </main>
+</body>
+</html>
