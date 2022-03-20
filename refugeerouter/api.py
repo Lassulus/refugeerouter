@@ -14,7 +14,7 @@ class RefugeeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Refugee
-        fields = '__all__'
+        exclude = [ 'group' ]
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -23,6 +23,14 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = '__all__'
+
+    def create(self, validated_data):
+        print(validated_data)
+        refugees_data = validated_data.pop('refugees')
+        group = Group.objects.create(**validated_data)
+        for refugee_data in refugees_data:
+            Refugee.objects.create(group=group, **refugee_data)
+        return group
 
 
 class RefugeeViewSet(viewsets.ModelViewSet):
