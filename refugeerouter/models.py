@@ -30,18 +30,18 @@ class Refugee(models.Model):
         (GENDER_UNKNOWN, 'Unknown'),
     ]
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
-    first_name = models.CharField(max_length=1024)
-    last_name = models.CharField(max_length=1024)
+    first_name = models.CharField(max_length=1024, blank=True)
+    last_name = models.CharField(max_length=1024, blank=True)
     age = models.IntegerField(default=40)
     gender = models.CharField(
         max_length=1,
         choices=GENDER_CHOICES,
-        default=GENDER_UNKNOWN
+        default=GENDER_UNKNOWN,
     )
-    contact_data = models.CharField(max_length=1024)
-    origin = models.CharField(max_length=1024)
+    contact_data = models.CharField(max_length=1024, blank=True)
+    origin = models.CharField(max_length=1024, blank=True)
     origin_checked = models.BooleanField(default=False)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, blank=True, null=True)
+    group = models.ForeignKey(Group, related_name='refugees', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['last_name']

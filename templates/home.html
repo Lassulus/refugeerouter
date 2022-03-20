@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Groups{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <table id="table" class="table table-striped table-bordered" style="width:100%" data-server-side="true" data-ajax="/api/groups/?format=datatables">
+          <thead>
+            <tr>
+              <th data-data="name">Name</th>
+              <th data-data="contact">Contact</th>
+              <th data-data="wish_city">Wish City</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script>
+      $(document).ready(function() {
+          $('#table').DataTable();
+      });
+  </script>
+{% endblock %}
