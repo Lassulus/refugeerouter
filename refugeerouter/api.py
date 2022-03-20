@@ -23,10 +23,10 @@ class GroupSerializer(serializers.ModelSerializer):
     num_adults = serializers.SerializerMethodField()
 
     def get_num_children(self, group):
-        return len(group.refugees.exclude(age__gt=17))
+        return len(group.refugees.filter(age__gt=17))
 
     def get_num_adults(self, group):
-        return len(group.refugees.filter(age__gt=17))
+        return len(group.refugees.exclude(age__gt=17))
 
     class Meta:
         model = Group
