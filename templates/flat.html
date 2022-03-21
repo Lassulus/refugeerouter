@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Flats{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <table id="table" class="table table-striped table-bordered" style="width:100%" data-server-side="true" data-ajax="/api/flats/?format=datatables">
+          <thead>
+            <tr>
+              <th data-data="address">Address</th>
+              <th data-data="owner_last_name">Owner name</th>
+              <th data-data="contact_data">Contact Data</th>
+              <th data-data="rooms">Rooms</th>
+              <th data-data="max_adults">Max adults</th>
+              <th data-data="max_male">Max males</th>
+              <th data-data="max_kids">Max kids</th>
+              <th data-data="min_kids_age">min_kids_age</th>
+              <th data-data="max_kids_age">max_kids_age</th>
+              <th data-data="interim">Interim</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+      <div id="new">
+        <table>
+          <thead>
+            <tr>
+              <th>Address</th>
+              <th>Owner name</th>
+              <th>Contact Data</th>
+              <th>Rooms</th>
+              <th>Max adults</th>
+              <th>Max males</th>
+              <th>Max kids</th>
+              <th>min_kids_age</th>
+              <th>max_kids_age</th>
+              <th>Interim</th>
+            </tr>
+          </thead>
+          <tdata>
+            <tr>
+              <td><input class="address">Address</td>
+              <td><input class="owner_last_name">Owner name</td>
+              <td><input class="contact_data">Contact Data</td>
+              <td><input class="rooms">Rooms</td>
+              <td><input class="max_adults">Max adults</td>
+              <td><input class="max_males">Max males</td>
+              <td><input class="max_kids">Max kids</td>
+              <td><input class="min_kids_age">min kids age</td>
+              <td><input class="max_kids_age">max kids age</td>
+              <td><input class="interim">Interim</td>
+              <td><button id="save">save</button></td>
+            </tr>
+          </tdata>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script>
+      $(document).ready(function() {
+          $('#table').DataTable();
+          $('#save').click(function() {
+            inputs = $("#new");
+            const newGroup = {
+              address: inputs.find("address")[0].value,
+              owner_last_name: inputs.find("owner_last_name")[0].value,
+              contact_data: inputs.find("contact_data")[0].value,
+              rooms: inputs.find("rooms")[0].value,
+              max_adults: inputs.find("max_adults")[0].value,
+              max_males: inputs.find("max_males")[0].value,
+              max_kids: inputs.find("max_kids")[0].value,
+              min_kids_age: inputs.find("min_kids_age")[0].value,
+              max_kids_age: inputs.find("max_kids_age")[0].value,
+              interim: inputs.find("interim")[0].value,
+            };
+            console.log(newGroup);
+            $.ajax({
+              url: "/api/flats/",
+              type: "POST",
+              data: JSON.stringify(newGroup),
+              contentType: "application/json",
+              dataType: "json",
+              beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+              },
+              success: function (arg) {
+                location.reload()
+              },
+              failure: function (err) {
+                console.log(err)
+              },
+            })
+          });
+      });
+  </script>
+{% endblock %}

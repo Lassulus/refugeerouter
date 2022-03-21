@@ -1,4 +1,4 @@
-from .models import Group, Refugee
+from .models import Flat, Group, Refugee
 from rest_framework import permissions, serializers, viewsets, routers
 
 
@@ -41,6 +41,13 @@ class GroupSerializer(serializers.ModelSerializer):
         return group
 
 
+class FlatSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Flat
+        fields = '__all__'
+
+
 class RefugeeViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -59,6 +66,16 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
+class FlatViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Flat.objects.all()
+    serializer_class = FlatSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
 router = routers.DefaultRouter()
 router.register(r'refugees', RefugeeViewSet)
 router.register(r'groups', GroupViewSet)
+router.register(r'flats', FlatViewSet)
