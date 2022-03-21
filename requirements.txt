@@ -2,3 +2,5 @@ Django==4.0.2
 djangorestframework==3.13.1
 gunicorn==20.1.0
 djangorestframework-datatables==0.7.0
+flake8
+black

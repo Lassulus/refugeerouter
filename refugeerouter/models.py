@@ -66,12 +66,13 @@ class Flat(models.Model):
     max_adults = models.IntegerField(default=0)
     min_kids_age = models.IntegerField(default=0)
     max_kids_age = models.IntegerField(default=18)
+    interim = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['rooms']
 
     def __str__(self):
-        return f'{self.rooms}:{self.kitchen}:{self.bath} {self.max_adults}:{self.max_kids}'
+        return f'{self.rooms}:{self.kitchen}:{self.bath} {self.max_adults}:{self.max_kids} {self.address}'
 
 
 class Driver(models.Model):
@@ -119,7 +120,7 @@ class Trip(models.Model):
 
 class Booking(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, blank=True, null=True)
     flat = models.ForeignKey(Flat, on_delete=models.CASCADE)
     start_date = models.DateField()
     end_date = models.DateField()
