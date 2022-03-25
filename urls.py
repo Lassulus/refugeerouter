@@ -18,10 +18,12 @@ from django.urls import path, include
 from refugeerouter.api import router
 from refugeerouter import views
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
     path('', views.group),
+    path("group/<uuid:pk>", views.GroupUpdateView.as_view(), name="GroupUpdate")
 ]
