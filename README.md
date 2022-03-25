@@ -28,5 +28,5 @@ This is a pretty standard django app, install should be like this (tested on Ubu
 Or the same with Nix:  
 \# start nix-shell  
 **./manage.py migrate**  
-**./manage.py createsuperuser** 
+**./manage.py createsuperuser**  
 **./mange.py runserver**
