@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 import uuid
 
 # TODO make all contacts into mobile numbers or emails?
@@ -13,6 +14,9 @@ class Group(models.Model):
 
     class Meta:
         ordering = ['name']
+
+    def get_absolute_url(self):
+        return reverse('GroupUpdate', kwargs={'pk': self.id})
 
     def __str__(self):
         return self.name
