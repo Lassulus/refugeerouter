@@ -1,6 +1,6 @@
 # Installation guide
 
-This is a pretty standard django app, install should be like this (tested on Ubuntu 20.04):
+This is a pretty standard django app, install should be like this (tested on Ubuntu 20.04):  
 
 \# Install python3-venv if not available  
 **sudo apt install python3-venv**
@@ -25,8 +25,8 @@ This is a pretty standard django app, install should be like this (tested on Ubu
 
 **Now you can use your browser to access the server on http://127.0.0.1:8000**
 
-or with nix:
-- nix-shell
-- ./manage.py migrate
-- ./manage.py createsuperuser
-- ./mange.py runserver
+Or the same with Nix:  
+\# start nix-shell  
+**./manage.py migrate**  
+**./manage.py createsuperuser**
+**./mange.py runserver**
