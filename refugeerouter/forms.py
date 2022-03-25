@@ -8,7 +8,6 @@ class UpdateGroupForm(forms.ModelForm):
     class Meta:
         model = Group
         fields = [
-            "contact",
             "name",
             "wish_city"
         ]
