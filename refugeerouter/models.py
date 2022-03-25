@@ -73,17 +73,41 @@ class Flat(models.Model):
     is_barrier_free = models.BooleanField(default=True)
     notes = models.CharField(max_length=1024, blank=True)
 
+    def __str__(self):
+        return f'{self.address} (owned by {self.owner_last_name})'
+
 
 class Booking(models.Model):
+    BOOKING_STATE_CLOSED = 'C'
+    BOOKING_STATE_CONFIRMED = 'F'
+    BOOKING_STATE_DENIED = 'D'
+    BOOKING_STATE_INHABITED = 'I'
+    BOOKING_STATE_OPEN = 'O'
+    BOOKING_STATE_REQUESTED = 'R'
+    BOOKING_STATE_CHOICES = [
+        (BOOKING_STATE_CLOSED, 'Closed'),
+        (BOOKING_STATE_CONFIRMED, 'Confirmed'),
+        (BOOKING_STATE_DENIED, 'Denied'),
+        (BOOKING_STATE_INHABITED, 'Inhabited'),
+        (BOOKING_STATE_OPEN, 'Open'),
+        (BOOKING_STATE_REQUESTED, 'Requested'),
+    ]
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     group = models.ForeignKey(Group, on_delete=models.CASCADE, blank=True, null=True)
     flat = models.ForeignKey(Flat, on_delete=models.CASCADE)
     start_date = models.DateField()
     end_date = models.DateField()
+    state = models.CharField(
+        max_length=1,
+        choices = BOOKING_STATE_CHOICES,
+        default = BOOKING_STATE_OPEN,
+    )
     notes = models.CharField(max_length=1024, blank=True)
 
     class Meta:
         ordering = ['start_date']
 
     def __str__(self):
+        if self.flat and self.state == Booking.BOOKING_STATE_OPEN:
+            return f'{self.flat} open from {self.start_date} till {self.end_date}'
         return f'{self.start_date} -> {self.end_date}'
