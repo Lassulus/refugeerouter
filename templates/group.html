@@ -4,9 +4,16 @@
 
 {% block content %}
   <div class="container">
+  <div class="row mb-3 mt-3">
+      <div class="col">
+          <button type="button" class="btn-lg btn-success">
+              <a class="text-white text-decoration-none" href="{% url 'add_group' %}">Add</a>
+          </button>
+      </div>
+  </div>
     <div class="row">
       <div class="col-sm-12">
-        <table id="table" class="table table-striped table-bordered" style="width:100%" data-server-side="true" data-ajax="/api/groups/?format=datatables">
+        <table id="table" class="table-responsive-sm table-striped table-bordered" style="width:100%" data-server-side="true" data-ajax="/api/groups/?format=datatables">
           <thead>
             <tr>
               <th data-data="name">Name</th>
@@ -18,63 +25,12 @@
           </thead>
         </table>
       </div>
-      <div id="new">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Contact</th>
-              <th>wish city</th>
-              <th>Adults</th>
-              <th>Children</th>
-              <th>save</th>
-            </tr>
-          </thead>
-          <tdata>
-            <tr>
-              <td><input class="name" type="text"></td>
-              <td><input class="contact" type="text"></td>
-              <td><input class="wish_city" type="text"></td>
-              <td><input class="adults" type="number" value=0></td>
-              <td><input class="children" type="number" value=0></td>
-              <td><button id="save">save</button></td>
-            </tr>
-          </tdata>
-        </table>
-      </div>
     </div>
   </div>
   <script>
       $(document).ready(function() {
           $('#table').DataTable();
-          $('#save').click(function() {
-            inputs = $("#new");
-            adults = Array(parseInt(inputs.find(".adults")[0].value)).fill({"age": 12})
-            children = Array(parseInt(inputs.find(".children")[0].value)).fill({"age": 32})
-            const newGroup = {
-              name: inputs.find(".name")[0].value,
-              contact: inputs.find(".contact")[0].value,
-              wish_city: inputs.find(".wish_city")[0].value,
-              refugees: [].concat(adults, children),
-            };
-            console.log(newGroup);
-            $.ajax({
-              url: "/api/groups/",
-              type: "POST",
-              data: JSON.stringify(newGroup),
-              contentType: "application/json",
-              dataType: "json",
-              beforeSend: function (xhr, settings) {
-                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-              },
-              success: function (arg) {
-                location.reload()
-              },
-              failure: function (err) {
-                console.log(err)
-              },
-            })
-          });
+
       });
   </script>
 {% endblock %}

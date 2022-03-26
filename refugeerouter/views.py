@@ -10,6 +10,9 @@ def group(request):
     return render(request, 'group.html')
 
 
+def add_group(request):
+    return render(request, 'add_group.html')
+
 class GroupUpdateView(LoginRequiredMixin, UpdateView):
     model = Group
     template_name = "group_update_view.html"

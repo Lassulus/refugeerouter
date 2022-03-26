@@ -25,5 +25,6 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
     path('', views.group),
+    path('add_group', views.add_group, name='add_group'),
     path("group/<uuid:pk>", views.GroupUpdateView.as_view(), name="GroupUpdate")
 ]
