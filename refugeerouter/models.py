@@ -9,7 +9,7 @@ class Group(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     name = models.CharField(max_length=1024)
     wish_city = models.CharField(max_length=1024, blank=True)
-    notes = models.CharField(max_length=1024, blank=True)
+    notes = models.TextField(max_length=1024, blank=True)
     contact_refugee = models.ForeignKey('Refugee', blank=True, null=True, related_name='primary_group', on_delete=models.CASCADE)
 
     class Meta:
@@ -48,7 +48,7 @@ class Refugee(models.Model):
     origin = models.CharField(max_length=1024, blank=True)
     origin_checked = models.BooleanField(default=False)
     group = models.ForeignKey(Group, related_name='refugees', on_delete=models.CASCADE)
-    notes = models.CharField(max_length=1024, blank=True)
+    notes = models.TextField(max_length=1024, blank=True)
 
 
     class Meta:
@@ -71,7 +71,7 @@ class Flat(models.Model):
     is_interim = models.BooleanField(default=True)
     is_pets_allowed = models.BooleanField(default=True)
     is_barrier_free = models.BooleanField(default=True)
-    notes = models.CharField(max_length=1024, blank=True)
+    notes = models.TextField(max_length=1024, blank=True)
 
     def __str__(self):
         return f'{self.address} (owned by {self.owner_last_name})'
@@ -102,7 +102,7 @@ class Booking(models.Model):
         choices = BOOKING_STATE_CHOICES,
         default = BOOKING_STATE_OPEN,
     )
-    notes = models.CharField(max_length=1024, blank=True)
+    notes = models.TextField(max_length=1024, blank=True)
 
     class Meta:
         ordering = ['start_date']
