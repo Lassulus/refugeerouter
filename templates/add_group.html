@@ -25,12 +25,13 @@
             <div class="row mt-3">
                 <div class="col-md-6">
                     <label for="adults">Adults</label>
-                    <input v-model="adults" type="number" name="adults" class="form-control" id="adults" placeholder="0"
+                    <input v-model="adults" type="number" min="0" name="adults" class="form-control" id="adults"
+                           placeholder="0"
                            required>
                 </div>
                 <div class="col-md-6">
                     <label for="children">Children</label>
-                    <input v-model="children" type="number" name="children" class="form-control" id="children"
+                    <input v-model="children" type="number" min="0" name="children" class="form-control" id="children"
                            placeholder="0" required>
                 </div>
             </div>
@@ -38,14 +39,13 @@
                 <div class="col">
                     <input v-model="wish_city" type="text" name="wish_city" class="form-control" id="wish_city"
                            aria-describedby="wish_city"
-                           placeholder="Wish City" required/>
+                           placeholder="Wish City"/>
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col">
                 <textarea v-model="notes" class="form-control" name="notes" id="notes" aria-describedby="notes"
-                          placeholder="Notes"
-                          required></textarea>
+                          placeholder="Notes"></textarea>
                 </div>
             </div>
             <div class="row mt-3">
@@ -60,24 +60,26 @@
 
         {#  FORM TO CREATE EACH REFUGEE START  #}
         <div v-if="show_refugees_form" id="refugees_form">
-            <div class="row text-right">
+            <div class="row align-items-center text-center">
                 <div class="col">
                     <h1>Family [[ new_group.name ]]</h1>
                 </div>
+                <div class="col">
+                    <button class="btn text-right btn-primary mt-3" @click="show_refugees_form = false">
+                        Back
+                    </button>
+                </div>
 
             </div>
-            <form v-on:submit.prevent="submitRefugees" v-for="(ref, i) in refugees"
+            <form v-for="(ref, i) in refugees"
                   class="w-75 mx-auto mt-5 border-dark border p-2">
-                <div class="col">
-                    <button class="btn text-right btn-success mt-3" type="submit">OK</button>
-                </div>
                 <div class="row mt-3">
                     <div class="col">
                         <label for="last_name">Last name</label>
                         <input v-model="refugees[i].last_name" type="text" name="last_name" class="form-control"
                                id="last_name"
                                aria-describedby="last_name"
-                               placeholder="last_name" required>
+                               placeholder="last name" required>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -86,7 +88,7 @@
                         <input v-model="refugees[i].first_name" type="text" name="first_name" class="form-control"
                                id="first_name"
                                aria-describedby="first_name"
-                               placeholder="first_name" required>
+                               placeholder="first name" required>
                     </div>
                 </div>
                 <div class="mt-3 custom-control-inline">
@@ -100,6 +102,22 @@
                            id="gender" :checked="refugees[i].gender === 'm'" value="M"
                     >
                     <label class="custom-control-label" for="male">Male</label>
+                </div>
+                <div class="mt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" v-model="refugees[i].need_barrier_free"
+                               id="check_barrier_fee" required>
+                        <label class="form-check-label" for="check_barrier_fee">
+                            Disabilities
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" v-model="refugees[i].pets" id="check_pets"
+                               required>
+                        <label class="form-check-label" for="check_pets">
+                            Pets
+                        </label>
+                    </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col">
@@ -126,16 +144,19 @@
                                   required></textarea>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col">
-                        <button class="btn text-right btn-danger mt-3">
-                            <a href="/" class="text-decoration-none text-white">Cancel</a>
-                        </button>
-                    </div>
-                </div>
             </form>
+            {#  FORM TO CREATE EACH REFUGEE END  #}
+            <div class="row mt-3 mb-5 align-items-center text-center">
+                <div class="col">
+                    <button class="btn text-right btn-danger mt-3">
+                        <a href="/" class="text-decoration-none text-white">Cancel</a>
+                    </button>
+                </div>
+                <div class="col ml-20">
+                    <button class="btn text-right btn-success mt-3" @click="submitRefugees">OK</button>
+                </div>
+            </div>
         </div>
-        {#  FORM TO CREATE EACH REFUGEE END  #}
 
     </div>
     <script>
@@ -167,7 +188,7 @@
                         first_name: '',
                         gender: 'F',
                         age: 32,
-                        disabilities: false,
+                        need_barrier_free: false,
                         pets: false,
                         origin: 'UKRAINE',
                         contact_data: 'phone number DE\n phone number UE\n messenger',
