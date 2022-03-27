@@ -4,6 +4,7 @@ from rest_framework import permissions, serializers, viewsets, routers
 
 
 class RefugeeSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField(allow_null=True)
     is_adult = serializers.SerializerMethodField()
     is_male = serializers.SerializerMethodField()
 
@@ -20,15 +21,15 @@ class RefugeeSerializer(serializers.ModelSerializer):
 
 class GroupSerializer(serializers.ModelSerializer):
     refugees = RefugeeSerializer(many=True)
-    num_children = serializers.SerializerMethodField()
-    num_adults = serializers.SerializerMethodField()
+    children = serializers.SerializerMethodField()
+    adults = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
 
-    def get_num_children(self, group):
-        return len(group.refugees.filter(age__gt=17))
+    def get_children(self, group):
+        return len(group.refugees.filter(age__lte=17))
 
-    def get_num_adults(self, group):
-        return len(group.refugees.exclude(age__gt=17))
+    def get_adults(self, group):
+        return len(group.refugees.exclude(age__lte=17))
 
     def get_url(self, group):
         return f"<a href=\"{reverse('GroupUpdate', args=[group.id])}\">Link</a>"

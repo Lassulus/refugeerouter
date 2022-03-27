@@ -3,48 +3,59 @@
 {% block title %}New Group{% endblock %}
 
 {% block content %}
-    <div class="container" id="app">
+    <div group="{{ group }}" refugees="{{ refugees }}" class="container" id="app">
 
         {#  FORM TO CREATE GROUP START  #}
         <form v-if="!show_refugees_form" v-on:submit.prevent="submitGroup" id="new-group-form"
               class="w-75 mx-auto mt-5 border-dark border p-2">
             <div class="row text-right">
-                <div class="col">
-                    <h1>New Group</h1>
-                </div>
+                {% if editing %}
+                    <div class="col">
+                        <h1>[[ new_group.name ]]</h1>
+                    </div>
+                {% else %}
+                    <div class="col">
+                        <h1>New Group</h1>
+                    </div>
+                {% endif %}
                 <div class="col">
                     <button class="btn text-right btn-success mt-3" type="submit">OK</button>
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col">
-                    <input v-model="name" type="text" name="name" class="form-control" id="name" aria-describedby="name"
+                    <input v-model="new_group.name" type="text" name="name" class="form-control" id="name"
+                           aria-describedby="name"
                            placeholder="Name (e.g. Family Braun)" required>
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col-md-6">
                     <label for="adults">Adults</label>
-                    <input v-model="adults" type="number" min="0" name="adults" class="form-control" id="adults"
+                    <input v-model="new_group.adults" type="number" min="0" name="adults" class="form-control"
+                           id="adults"
                            placeholder="0"
                            required>
                 </div>
                 <div class="col-md-6">
                     <label for="children">Children</label>
-                    <input v-model="children" type="number" min="0" name="children" class="form-control" id="children"
+                    <input v-model="new_group.children" type="number" min="0" name="children" class="form-control"
+                           id="children"
                            placeholder="0" required>
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col">
-                    <input v-model="wish_city" type="text" name="wish_city" class="form-control" id="wish_city"
+                    <input v-model="new_group.wish_city" type="text" name="wish_city" class="form-control"
+                           id="wish_city"
                            aria-describedby="wish_city"
                            placeholder="Wish City"/>
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col">
-                <textarea v-model="notes" class="form-control" name="notes" id="notes" aria-describedby="notes"
+                <textarea v-model="new_group.notes" class="form-control" name="notes" id="notes"
+                          aria-describedby="notes"
                           placeholder="Notes"></textarea>
                 </div>
             </div>
@@ -61,7 +72,7 @@
         {#  FORM TO CREATE EACH REFUGEE START  #}
         <div v-if="show_refugees_form" id="refugees_form">
             <div class="row align-items-center text-center">
-                <div class="col">
+                <div v-if="!editing" class="col">
                     <h1>Family [[ new_group.name ]]</h1>
                 </div>
                 <div class="col">
@@ -103,6 +114,15 @@
                     >
                     <label class="custom-control-label" for="male">Male</label>
                 </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="age">Age</label>
+                        <input v-model="refugees[i].age" type="number" min="0" name="age" class="form-control"
+                               id="age"
+                               placeholder="0"
+                               required>
+                    </div>
+                </div>
                 <div class="mt-3">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" v-model="refugees[i].need_barrier_free"
@@ -112,10 +132,10 @@
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" v-model="refugees[i].pets" id="check_pets"
+                        <input class="form-check-input" type="checkbox" v-model="refugees[i].has_pets" id="check_has_pets"
                                required>
-                        <label class="form-check-label" for="check_pets">
-                            Pets
+                        <label class="form-check-label" for="check_has_pets">
+                            has_pets
                         </label>
                     </div>
                 </div>
@@ -164,51 +184,72 @@
             delimiters: ['[[', ']]'],
             el: '#app',
             data: {
-                name: '',
-                adults: '',
-                children: '',
-                wish_city: '',
-                notes: '',
                 show_refugees_form: false,
-                new_group: {},
+                new_group: {
+                    name: '',
+                    adults: '',
+                    children: '',
+                    wish_city: '',
+                    notes: '',
+                },
                 refugees: [],
+                editing: false
+            },
+            beforeMount() {
+                const elem = document.getElementById('app')
+                try {
+                    this.new_group = JSON.parse(elem.getAttribute('group'))
+                    this.refugees = this.new_group.refugees
+                } catch (e) {
+                }
+                this.editing = !!this.new_group.id
             },
             methods: {
-                submitGroup(submitEvent) {
-                    this.new_group = {
-                        name: this.name,
-                        adults: parseInt(this.adults),
-                        children: parseInt(this.children),
-                        wish_city: this.wish_city,
-                        notes: this.notes,
-                    }
+                concatArrays(adults, children, defaultData) {
+                    let adultArray = Array(parseInt(adults)).fill().map((e) => ({...defaultData}))
+                    let childrenArray = Array(parseInt(children)).fill().map((e) => ({
+                        ...defaultData,
+                        age: 12
+                    }))
+                    this.refugees = [...this.refugees, ...adultArray, ...childrenArray]
+                },
+                submitGroup() {
                     this.show_refugees_form = true
                     let defaultData = {
+                        id: null,
                         last_name: '',
                         first_name: '',
                         gender: 'F',
                         age: 32,
                         need_barrier_free: false,
-                        pets: false,
+                        has_pets: false,
                         origin: 'UKRAINE',
                         contact_data: 'phone number DE\n phone number UE\n messenger',
                         notes: '',
                     }
-                    let adults = Array(parseInt(this.adults)).fill().map((e) => ({...defaultData}))
-                    let children = Array(parseInt(this.children)).fill().map((e) => ({...defaultData, age: 12}))
-                    this.refugees = adults.concat(children)
+                    if (!this.editing) {
+                        this.concatArrays(this.new_group.adults, this.new_group.children, defaultData)
+                    }
+                    const diffChildren = this.new_group.children - this.refugees.filter((r) => r.age <= 17).length
+                    const diffAdults = this.new_group.adults - this.refugees.filter((r) => r.age > 17).length
+                    if (diffChildren > 0 || diffAdults > 0) {
+                        this.concatArrays(diffAdults, diffChildren, defaultData)
+                    }
                 },
                 submitRefugees() {
                     let payload = {...this.new_group, refugees: this.refugees}
-                    fetch('/api/groups/', {
+                    fetch(!this.editing ? '/api/groups/' : `/group/${this.new_group.id}`, {
                         method: "POST",
                         headers: {"X-CSRFToken": "{{ csrf_token }}", 'Content-Type': 'application/json'},
                         body: JSON.stringify(payload)
-                    }).then(() => {
-                        alert("Group created")
-                        window.location.href = "/"
+                    }).then((res) => {
+                        if (res.ok) {
+                            alert(!this.editing ? "Group created" : "Group updated")
+                            window.location.href = "/"
+                        } else {
+                            alert("there was an error")
+                        }
                     })
-
                 }
             }
         });
