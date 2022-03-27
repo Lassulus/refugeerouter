@@ -16,6 +16,7 @@ The app is aimed at three target groups: Drivers, so-called dispatchers and back
 
 If you like to code in Python or JavaScript or would like to help in other regards, you are more then welcome. Please leave a short note in the issues and we will contact you. 
 
+---  
 
 # Einführung  
 
