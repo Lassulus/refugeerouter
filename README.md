@@ -9,7 +9,7 @@ This is a pretty standard django app, install should be like this (tested on Ubu
 \# Fork this app in your own Github repository, using the "Fork" button on Github  
 
 \# Then clone this app from your repo  
-**git clone https://github.com/<yourrepo>/refugeerouter.git**  
+**git clone https://github.com/\<yourrepo\>/refugeerouter.git**  
 
 \# Enter cloned repo locally  
 **cd refugeerouter**  
