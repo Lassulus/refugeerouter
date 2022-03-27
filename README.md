@@ -23,7 +23,11 @@ This is a pretty standard django app, install should be like this (tested on Ubu
 \# Run the server  
 **./manage.py runserver**  
 
-**Now you can use your browser to access the server on http://127.0.0.1:8000**
+\# Deactivate virtual environment
+**deactive**
+
+**Now you can use your browser to access the user interface on http://127.0.0.1:8000**
+**For the admin interface, use http://127.0.0.1:8000/admin**
 
 Or the same with Nix:  
 \# start nix-shell  
