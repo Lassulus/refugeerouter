@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 import uuid
-
 # TODO make all contacts into mobile numbers or emails?
 
 
@@ -111,3 +111,23 @@ class Booking(models.Model):
         if self.flat and self.state == Booking.BOOKING_STATE_OPEN:
             return f'{self.flat} open from {self.start_date} till {self.end_date}'
         return f'{self.start_date} -> {self.end_date}'
+
+
+class User(AbstractUser):
+    first_name = models.CharField(max_length=1024, blank=True)
+    last_name = models.CharField(max_length=1024, blank=True)
+    nick_name = models.CharField(max_length=1024, blank=True)
+    contact_data = models.TextField(max_length=1024, blank=True)
+    languages = models.CharField(max_length=1024, blank=True)
+    num_seats = models.IntegerField(default=0)
+
+    is_notifier = models.BooleanField(default=False)
+    is_authority_supporters = models.BooleanField(default=False)
+    is_flat_owner = models.BooleanField(default=False)
+    is_dispatcher = models.BooleanField(default=False)
+    is_paramedic = models.BooleanField(default=False)
+    notes = models.TextField(max_length=1024, blank=True)
+
+    @property
+    def is_driver(self):
+        return self.num_seats > 0

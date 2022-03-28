@@ -14,6 +14,7 @@ in
 pkgs.mkShell {
   buildInputs = [
     python
+    pkgs.sqlite
     (pkgs.writers.writeDashBin "deploy" ''
       rsync -va \
         -e "ssh -p 45621 -o StrictHostKeyChecking=no" \
