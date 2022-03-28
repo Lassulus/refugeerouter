@@ -25,7 +25,7 @@ pkgs.mkShell {
     (pkgs.writers.writeDashBin "serve" ''
       cd ${toString ./.}
       if test -n $PRODUCTION; then
-        python manage.py collectstatic
+        python manage.py collectstatic --noinput
       fi
       python manage.py migrate
       gunicorn wsgi:application -b localhost:''${PORT:-1337}
