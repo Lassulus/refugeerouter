@@ -19,6 +19,7 @@ pkgs.mkShell {
       rsync -va \
         -e "ssh -p 45621 -o StrictHostKeyChecking=no" \
         --filter=':- .gitignore' \
+        --delete \
         ${toString ./.}/ ref.ptkk.de@ref.ptkk.de:/var/lib/ref.ptkk.de/code/
     '')
     (pkgs.writers.writeDashBin "serve" ''
