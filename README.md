@@ -49,3 +49,22 @@ Or the same with Nix:
 **./manage.py migrate**  
 **./manage.py createsuperuser**  
 **./mange.py runserver**
+
+# Troubleshooting  
+
+If you install, test and run the software locally, sometimes it might be neccessary to renew the database of your installation due to changes in migrations.  
+
+\# Secure the existing database  
+**mv db.sqlite3 ../<somebackupfolder\>**
+
+\# Active venv environment (a '(venv)' prompt will show up)  
+**. venv/bin/activate**
+
+\# Adapt/update your Django model  
+**./manage.py migrate**
+
+\# Create a new superuser for the admin interface  
+**./manage.py createsuperuser**
+
+\# Run the server  
+**./manage.py runserver**  
