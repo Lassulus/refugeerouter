@@ -14,16 +14,18 @@ in
 pkgs.mkShell {
   buildInputs = [
     python
+    pkgs.sqlite
     (pkgs.writers.writeDashBin "deploy" ''
       rsync -va \
         -e "ssh -p 45621 -o StrictHostKeyChecking=no" \
         --filter=':- .gitignore' \
+        --delete \
         ${toString ./.}/ ref.ptkk.de@ref.ptkk.de:/var/lib/ref.ptkk.de/code/
     '')
     (pkgs.writers.writeDashBin "serve" ''
       cd ${toString ./.}
       if test -n $PRODUCTION; then
-        python manage.py collectstatic
+        python manage.py collectstatic --noinput
       fi
       python manage.py migrate
       gunicorn wsgi:application -b localhost:''${PORT:-1337}
